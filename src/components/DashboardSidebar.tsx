@@ -1,4 +1,4 @@
-import { Paw, Users, FileText, Building2, UserCircle, BarChart3 } from 'lucide-react';
+import { PawPrint, Users, FileText, Building2, UserCircle, BarChart3 } from 'lucide-react';
 import { useLocation, Link } from 'react-router-dom';
 import {
   Sidebar,
@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/sidebar";
 
 const menuItems = [
-  { title: "Pets", icon: Paw, path: "/pets" },
+  { title: "Pets", icon: PawPrint, path: "/pets" },
   { title: "People", icon: Users, path: "/people" },
   { title: "Applications", icon: FileText, path: "/applications" },
   { title: "Partners", icon: Building2, path: "/partners" },
