@@ -13,6 +13,7 @@ import Partners from "./pages/Partners";
 import Users from "./pages/Users";
 import Reporting from "./pages/Reporting";
 import AddPersonForm from "./components/AddPersonForm";
+import InviteUserForm from "./components/InviteUserForm";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/applications" element={<Applications />} />
             <Route path="/partners" element={<Partners />} />
             <Route path="/users" element={<Users />} />
+            <Route path="/users/invite" element={<InviteUserForm />} />
             <Route path="/reporting" element={<Reporting />} />
           </Route>
         </Routes>
