@@ -4,6 +4,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import DashboardLayout from "./components/DashboardLayout";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 import Pets from "./pages/Pets";
 import People from "./pages/People";
 import Applications from "./pages/Applications";
@@ -19,17 +21,19 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <DashboardLayout>
-          <Routes>
-            <Route path="/" element={<Navigate to="/pets" replace />} />
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route element={<DashboardLayout />}>
             <Route path="/pets" element={<Pets />} />
             <Route path="/people" element={<People />} />
             <Route path="/applications" element={<Applications />} />
             <Route path="/partners" element={<Partners />} />
             <Route path="/users" element={<Users />} />
             <Route path="/reporting" element={<Reporting />} />
-          </Routes>
-        </DashboardLayout>
+          </Route>
+        </Routes>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
