@@ -1,10 +1,12 @@
 import { Card } from "@/components/ui/card";
+import { AddPartnerForm } from "@/components/AddPartnerForm";
 
 const Partners = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Partners</h1>
+        <AddPartnerForm />
       </div>
       <Card className="p-6">
         <h2 className="text-xl font-semibold mb-4">Partner Organizations</h2>
