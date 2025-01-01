@@ -12,6 +12,7 @@ import Applications from "./pages/Applications";
 import Partners from "./pages/Partners";
 import Users from "./pages/Users";
 import Reporting from "./pages/Reporting";
+import AddPersonForm from "./components/AddPersonForm";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ const App = () => (
           <Route element={<DashboardLayout />}>
             <Route path="/pets" element={<Pets />} />
             <Route path="/people" element={<People />} />
+            <Route path="/people/add" element={<AddPersonForm />} />
             <Route path="/applications" element={<Applications />} />
             <Route path="/partners" element={<Partners />} />
             <Route path="/users" element={<Users />} />
