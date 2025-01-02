@@ -15,6 +15,7 @@ import Users from "./pages/Users";
 import Reporting from "./pages/Reporting";
 import AddPersonForm from "./components/AddPersonForm";
 import InviteUserForm from "./components/InviteUserForm";
+import OrganizationSettings from "./pages/OrganizationSettings";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="/users" element={<Users />} />
             <Route path="/users/invite" element={<InviteUserForm />} />
             <Route path="/reporting" element={<Reporting />} />
+            <Route path="/organization-settings" element={<OrganizationSettings />} />
           </Route>
         </Routes>
       </BrowserRouter>

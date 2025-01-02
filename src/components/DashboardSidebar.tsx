@@ -27,7 +27,9 @@ const DashboardSidebar = () => {
     <Sidebar>
       <SidebarContent>
         <div className="p-6">
-          <h1 className="text-2xl font-bold text-primary">PetAdopt</h1>
+          <Link to="/dashboard" className="inline-block">
+            <h1 className="text-2xl font-bold text-primary">PetAdopt</h1>
+          </Link>
         </div>
         <SidebarGroup>
           <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
