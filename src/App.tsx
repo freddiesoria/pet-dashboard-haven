@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import DashboardLayout from "./components/DashboardLayout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
 import Pets from "./pages/Pets";
 import People from "./pages/People";
 import Applications from "./pages/Applications";
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route element={<DashboardLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/pets" element={<Pets />} />
             <Route path="/people" element={<People />} />
             <Route path="/people/add" element={<AddPersonForm />} />
