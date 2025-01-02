@@ -22,6 +22,45 @@ const OrganizationSettings = () => {
 
         <TabsContent value="overview" className="space-y-4">
           <Card className="p-6">
+            <div className="space-y-4">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h2 className="text-xl font-semibold mb-1">Details</h2>
+                  <div className="space-y-2">
+                    <div>
+                      <span className="text-sm text-muted-foreground">Name</span>
+                      <p>Citics Solutions S.L.</p>
+                    </div>
+                    <div>
+                      <span className="text-sm text-muted-foreground">Website</span>
+                      <p>-</p>
+                    </div>
+                    <div>
+                      <span className="text-sm text-muted-foreground">Phone</span>
+                      <p>N/A</p>
+                    </div>
+                    <div>
+                      <span className="text-sm text-muted-foreground">Email</span>
+                      <p className="text-primary">info@hoozzee.com</p>
+                    </div>
+                    <div>
+                      <span className="text-sm text-muted-foreground">Address</span>
+                      <p>Joan de Joanes 1</p>
+                      <p>Frankfurt, Hessen 60385</p>
+                      <p>Germany</p>
+                    </div>
+                  </div>
+                </div>
+                <Button variant="link" className="text-primary">
+                  Edit
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="pet-settings" className="space-y-4">
+          <Card className="p-6">
             <h2 className="text-xl font-semibold mb-4">Pet Exports</h2>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -76,21 +115,38 @@ const OrganizationSettings = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="pet-settings">
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold">Pet Settings Content</h2>
-          </Card>
-        </TabsContent>
-
         <TabsContent value="forms">
           <Card className="p-6">
             <h2 className="text-xl font-semibold">Forms Content</h2>
           </Card>
         </TabsContent>
 
-        <TabsContent value="settings">
+        <TabsContent value="settings" className="space-y-4">
           <Card className="p-6">
-            <h2 className="text-xl font-semibold">Settings Content</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-semibold">Localization Settings</h2>
+              <Button variant="link" className="text-primary">
+                Edit
+              </Button>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-sm font-medium text-muted-foreground">Address Style</h3>
+                <p>United States</p>
+              </div>
+              <div>
+                <h3 className="text-sm font-medium text-muted-foreground">Country Code</h3>
+                <p>+1</p>
+              </div>
+              <div>
+                <h3 className="text-sm font-medium text-muted-foreground">Currency</h3>
+                <p>USD $</p>
+              </div>
+              <div>
+                <h3 className="text-sm font-medium text-muted-foreground">Units of Measurement</h3>
+                <p>Imperial</p>
+              </div>
+            </div>
           </Card>
         </TabsContent>
 
