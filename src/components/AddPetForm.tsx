@@ -237,45 +237,44 @@ export function AddPetForm() {
               </div>
             </div>
 
-              <div className="col-span-2 border-2 border-dashed border-muted rounded-lg p-6 text-center space-y-4">
-                <Input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  className="hidden"
-                  id="pet-image"
-                />
-                <Label
-                  htmlFor="pet-image"
-                  className="flex flex-col items-center gap-2 cursor-pointer"
-                >
-                  <div className="bg-muted/50 p-4 rounded-full">
-                    <Upload className="h-6 w-6" />
-                  </div>
-                  <div className="text-sm">
-                    {selectedFile ? (
-                      <span className="text-primary">{selectedFile.name}</span>
-                    ) : (
-                      <>Click to upload or drag and drop</>
-                    )}
-                  </div>
-                  <div className="text-xs text-muted-foreground">
-                    PNG, JPG or GIF (max. 5MB)
-                  </div>
-                </Label>
-                {selectedFile && (
-                  <div className="mt-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setSelectedFile(null)}
-                    >
-                      Remove
-                    </Button>
-                  </div>
-                )}
-              </div>
+            <div className="col-span-2 border-2 border-dashed border-muted rounded-lg p-6 text-center space-y-4">
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="hidden"
+                id="pet-image"
+              />
+              <Label
+                htmlFor="pet-image"
+                className="flex flex-col items-center gap-2 cursor-pointer"
+              >
+                <div className="bg-muted/50 p-4 rounded-full">
+                  <Upload className="h-6 w-6" />
+                </div>
+                <div className="text-sm">
+                  {selectedFile ? (
+                    <span className="text-primary">{selectedFile.name}</span>
+                  ) : (
+                    <>Click to upload or drag and drop</>
+                  )}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  PNG, JPG or GIF (max. 5MB)
+                </div>
+              </Label>
+              {selectedFile && (
+                <div className="mt-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setSelectedFile(null)}
+                  >
+                    Remove
+                  </Button>
+                </div>
+              )}
             </div>
 
             <div className="flex justify-end gap-4">
