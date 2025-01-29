@@ -6,6 +6,7 @@ import { useToast } from "./ui/use-toast";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { addDays, isPast } from "date-fns";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 const DashboardLayout = () => {
   const [session, setSession] = useState<any>(null);
@@ -107,12 +108,14 @@ const DashboardLayout = () => {
   }
 
   return (
-    <div className="flex min-h-screen">
-      <DashboardSidebar />
-      <main className="flex-1 p-8">
-        <Outlet />
-      </main>
-    </div>
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full">
+        <DashboardSidebar />
+        <main className="flex-1 p-8">
+          <Outlet />
+        </main>
+      </div>
+    </SidebarProvider>
   );
 };
 
