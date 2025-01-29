@@ -12,11 +12,12 @@ const DashboardLayout = () => {
   const [session, setSession] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [trialExpired, setTrialExpired] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
-    // Check authentication status
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setLoading(false);
@@ -31,6 +32,32 @@ const DashboardLayout = () => {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    const checkSubscriptionStatus = async () => {
+      if (session?.access_token) {
+        try {
+          const { data, error } = await supabase.functions.invoke('check-subscription', {
+            headers: {
+              Authorization: `Bearer ${session.access_token}`,
+            },
+          });
+
+          if (error) throw error;
+          setIsSubscribed(data.subscribed);
+        } catch (error) {
+          console.error('Error checking subscription:', error);
+          toast({
+            title: "Error",
+            description: "Could not check subscription status",
+            variant: "destructive",
+          });
+        }
+      }
+    };
+
+    checkSubscriptionStatus();
+  }, [session, toast]);
 
   useEffect(() => {
     const checkTrialStatus = async () => {
@@ -60,6 +87,33 @@ const DashboardLayout = () => {
     checkTrialStatus();
   }, [session, toast]);
 
+  const handleSubscribe = async () => {
+    if (!session?.access_token) return;
+
+    setCheckoutLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (error) throw error;
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      console.error('Error creating checkout session:', error);
+      toast({
+        title: "Error",
+        description: "Could not initiate checkout process",
+        variant: "destructive",
+      });
+    } finally {
+      setCheckoutLoading(false);
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -68,7 +122,7 @@ const DashboardLayout = () => {
     return <Navigate to="/login" replace />;
   }
 
-  if (trialExpired) {
+  if (trialExpired && !isSubscribed) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-4">
         <Card className="w-full max-w-md">
@@ -81,15 +135,10 @@ const DashboardLayout = () => {
           <CardContent className="space-y-4">
             <Button 
               className="w-full" 
-              onClick={() => {
-                // This will be replaced with Stripe checkout in the next step
-                toast({
-                  title: "Coming Soon",
-                  description: "Subscription functionality will be available soon!",
-                });
-              }}
+              onClick={handleSubscribe}
+              disabled={checkoutLoading}
             >
-              Subscribe Now
+              {checkoutLoading ? "Loading..." : "Subscribe Now"}
             </Button>
             <Button 
               variant="outline" 
