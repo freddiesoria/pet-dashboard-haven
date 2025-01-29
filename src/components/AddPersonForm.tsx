@@ -18,10 +18,11 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Save } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
+import { useState } from "react";
 
 const formSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -62,6 +63,7 @@ const formSchema = z.object({
 const AddPersonForm = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -80,6 +82,7 @@ const AddPersonForm = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      setIsSubmitting(true);
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -141,8 +144,12 @@ const AddPersonForm = () => {
         description: "Failed to add person. Please try again.",
         variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+  // ... keep existing code (form fields JSX)
 
   return (
     <div className="container mx-auto p-6 max-w-5xl">
@@ -621,8 +628,23 @@ const AddPersonForm = () => {
           </div>
 
           <div className="flex justify-end gap-4">
-            <Button type="submit" size="lg">
-              Add Person
+            <Button 
+              type="submit" 
+              size="lg" 
+              disabled={isSubmitting}
+              className="min-w-[150px]"
+            >
+              {isSubmitting ? (
+                <span className="flex items-center gap-2">
+                  <span className="i-lucide-loader-2 animate-spin" />
+                  Saving...
+                </span>
+              ) : (
+                <span className="flex items-center gap-2">
+                  <Save className="h-4 w-4" />
+                  Add Person
+                </span>
+              )}
             </Button>
           </div>
         </form>
