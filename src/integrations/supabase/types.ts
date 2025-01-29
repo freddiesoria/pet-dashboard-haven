@@ -9,6 +9,72 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      pets: {
+        Row: {
+          altered: boolean | null
+          breed: string | null
+          condition_on_intake: string | null
+          created_at: string
+          date_of_birth: string | null
+          gender: string | null
+          id: string
+          image_url: string | null
+          intake_date: string | null
+          intake_type: string | null
+          internal_id: string
+          microchip_number: string | null
+          name: string
+          species: string | null
+          status: string
+          updated_at: string
+          user_id: string
+          weight: number | null
+          weight_unit: string | null
+        }
+        Insert: {
+          altered?: boolean | null
+          breed?: string | null
+          condition_on_intake?: string | null
+          created_at?: string
+          date_of_birth?: string | null
+          gender?: string | null
+          id?: string
+          image_url?: string | null
+          intake_date?: string | null
+          intake_type?: string | null
+          internal_id: string
+          microchip_number?: string | null
+          name: string
+          species?: string | null
+          status: string
+          updated_at?: string
+          user_id: string
+          weight?: number | null
+          weight_unit?: string | null
+        }
+        Update: {
+          altered?: boolean | null
+          breed?: string | null
+          condition_on_intake?: string | null
+          created_at?: string
+          date_of_birth?: string | null
+          gender?: string | null
+          id?: string
+          image_url?: string | null
+          intake_date?: string | null
+          intake_type?: string | null
+          internal_id?: string
+          microchip_number?: string | null
+          name?: string
+          species?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+          weight?: number | null
+          weight_unit?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null

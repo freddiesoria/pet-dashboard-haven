@@ -19,17 +19,43 @@ import {
 import { PlusCircle, Upload } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function AddPetForm() {
   const [open, setOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [formData, setFormData] = useState({
+    petName: "",
+    status: "",
+    dateOfBirth: "",
+    gender: "",
+    altered: "",
+    weight: "",
+    weightUnit: "lbs",
+    species: "",
+    breed: "",
+    microchipNumber: "",
+    intakeType: "",
+    intakeDate: "",
+    conditionOnIntake: "",
+  });
   const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const handleSelectChange = (value: string, field: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+      if (file.size > 5 * 1024 * 1024) {
         toast({
           title: "File too large",
           description: "Please select an image under 5MB",
@@ -37,7 +63,7 @@ export function AddPetForm() {
         });
         return;
       }
-      if (!file.type.startsWith('image/')) {
+      if (!file.type.startsWith("image/")) {
         toast({
           title: "Invalid file type",
           description: "Please select an image file",
@@ -54,26 +80,67 @@ export function AddPetForm() {
     setIsUploading(true);
 
     try {
+      let imageUrl = null;
       if (selectedFile) {
-        const fileExt = selectedFile.name.split('.').pop();
-        const filePath = `${crypto.randomUUID()}.${fileExt}`;
+        const fileExt = selectedFile.name.split(".").pop();
+        const fileName = `${crypto.randomUUID()}.${fileExt}`;
 
         const { error: uploadError } = await supabase.storage
-          .from('pets')
-          .upload(filePath, selectedFile);
+          .from("pets")
+          .upload(fileName, selectedFile);
 
-        if (uploadError) {
-          throw uploadError;
-        }
-
-        toast({
-          title: "Success",
-          description: "Image uploaded successfully",
-        });
+        if (uploadError) throw uploadError;
+        imageUrl = fileName;
       }
 
-      // Handle other form submission logic here
+      const { data: userData, error: userError } = await supabase.auth.getUser();
+      if (userError) throw userError;
+
+      const { error: insertError } = await supabase.from("pets").insert({
+        name: formData.petName,
+        internal_id: `D-${Math.random().toString().slice(2, 11)}`,
+        status: formData.status,
+        date_of_birth: formData.dateOfBirth || null,
+        gender: formData.gender || null,
+        altered: formData.altered === "yes" ? true : formData.altered === "no" ? false : null,
+        weight: formData.weight ? parseFloat(formData.weight) : null,
+        weight_unit: formData.weightUnit,
+        species: formData.species || null,
+        breed: formData.breed || null,
+        microchip_number: formData.microchipNumber || null,
+        intake_type: formData.intakeType || null,
+        intake_date: formData.intakeDate || null,
+        condition_on_intake: formData.conditionOnIntake || null,
+        image_url: imageUrl,
+        user_id: userData.user.id,
+      });
+
+      if (insertError) throw insertError;
+
+      queryClient.invalidateQueries({ queryKey: ["pets"] });
+
+      toast({
+        title: "Success",
+        description: "Pet added successfully",
+      });
+
       setOpen(false);
+      setSelectedFile(null);
+      setFormData({
+        petName: "",
+        status: "",
+        dateOfBirth: "",
+        gender: "",
+        altered: "",
+        weight: "",
+        weightUnit: "lbs",
+        species: "",
+        breed: "",
+        microchipNumber: "",
+        intakeType: "",
+        intakeDate: "",
+        conditionOnIntake: "",
+      });
     } catch (error: any) {
       toast({
         title: "Error",
@@ -297,4 +364,4 @@ export function AddPetForm() {
       </Dialog>
     </>
   );
-}
+};
