@@ -82,6 +82,7 @@ export type Database = {
           email: string
           full_name: string | null
           id: string
+          trial_start: string
           updated_at: string
         }
         Insert: {
@@ -90,6 +91,7 @@ export type Database = {
           email: string
           full_name?: string | null
           id: string
+          trial_start?: string
           updated_at?: string
         }
         Update: {
@@ -98,6 +100,7 @@ export type Database = {
           email?: string
           full_name?: string | null
           id?: string
+          trial_start?: string
           updated_at?: string
         }
         Relationships: []
