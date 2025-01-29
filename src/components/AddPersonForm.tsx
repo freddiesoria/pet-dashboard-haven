@@ -20,6 +20,8 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/components/ui/use-toast";
 
 const formSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -59,6 +61,7 @@ const formSchema = z.object({
 
 const AddPersonForm = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -75,9 +78,70 @@ const AddPersonForm = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
-    // TODO: Handle form submission
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        toast({
+          title: "Error",
+          description: "You must be logged in to add a person",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const { error } = await supabase.from("people").insert({
+        first_name: values.firstName,
+        last_name: values.lastName,
+        phone: values.phone,
+        email: values.email,
+        street1: values.street1,
+        street2: values.street2 || null,
+        city: values.city,
+        state: values.state,
+        country: values.country,
+        zip_code: values.zipCode,
+        adopter: values.adopter,
+        potential_adopter: values.potentialAdopter,
+        adopt_waitlist: values.adoptWaitlist,
+        do_not_adopt: values.doNotAdopt,
+        foster: values.foster,
+        available_foster: values.availableFoster,
+        current_foster: values.currentFoster,
+        dormant_foster: values.dormantFoster,
+        foster_waitlist: values.fosterWaitlist,
+        do_not_foster: values.doNotFoster,
+        volunteer: values.volunteer,
+        do_not_volunteer: values.doNotVolunteer,
+        donor: values.donor,
+        board_member: values.boardMember,
+        has_dogs: values.hasDogs,
+        has_cats: values.hasCats,
+        has_kids: values.hasKids,
+        processing_application: values.processingApplication,
+        owner_surrender: values.ownerSurrender,
+        user_id: user.id,
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Person added successfully",
+      });
+
+      navigate("/people");
+    } catch (error) {
+      console.error("Error adding person:", error);
+      toast({
+        title: "Error",
+        description: "Failed to add person. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (

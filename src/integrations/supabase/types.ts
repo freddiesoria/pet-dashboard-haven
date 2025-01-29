@@ -9,6 +9,114 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      people: {
+        Row: {
+          adopt_waitlist: boolean | null
+          adopter: boolean | null
+          available_foster: boolean | null
+          board_member: boolean | null
+          city: string
+          country: string
+          created_at: string
+          current_foster: boolean | null
+          do_not_adopt: boolean | null
+          do_not_foster: boolean | null
+          do_not_volunteer: boolean | null
+          donor: boolean | null
+          dormant_foster: boolean | null
+          email: string
+          first_name: string
+          foster: boolean | null
+          foster_waitlist: boolean | null
+          has_cats: boolean | null
+          has_dogs: boolean | null
+          has_kids: boolean | null
+          id: string
+          last_name: string
+          owner_surrender: boolean | null
+          phone: string
+          potential_adopter: boolean | null
+          processing_application: boolean | null
+          state: string
+          street1: string
+          street2: string | null
+          updated_at: string
+          user_id: string
+          volunteer: boolean | null
+          zip_code: string
+        }
+        Insert: {
+          adopt_waitlist?: boolean | null
+          adopter?: boolean | null
+          available_foster?: boolean | null
+          board_member?: boolean | null
+          city: string
+          country: string
+          created_at?: string
+          current_foster?: boolean | null
+          do_not_adopt?: boolean | null
+          do_not_foster?: boolean | null
+          do_not_volunteer?: boolean | null
+          donor?: boolean | null
+          dormant_foster?: boolean | null
+          email: string
+          first_name: string
+          foster?: boolean | null
+          foster_waitlist?: boolean | null
+          has_cats?: boolean | null
+          has_dogs?: boolean | null
+          has_kids?: boolean | null
+          id?: string
+          last_name: string
+          owner_surrender?: boolean | null
+          phone: string
+          potential_adopter?: boolean | null
+          processing_application?: boolean | null
+          state: string
+          street1: string
+          street2?: string | null
+          updated_at?: string
+          user_id: string
+          volunteer?: boolean | null
+          zip_code: string
+        }
+        Update: {
+          adopt_waitlist?: boolean | null
+          adopter?: boolean | null
+          available_foster?: boolean | null
+          board_member?: boolean | null
+          city?: string
+          country?: string
+          created_at?: string
+          current_foster?: boolean | null
+          do_not_adopt?: boolean | null
+          do_not_foster?: boolean | null
+          do_not_volunteer?: boolean | null
+          donor?: boolean | null
+          dormant_foster?: boolean | null
+          email?: string
+          first_name?: string
+          foster?: boolean | null
+          foster_waitlist?: boolean | null
+          has_cats?: boolean | null
+          has_dogs?: boolean | null
+          has_kids?: boolean | null
+          id?: string
+          last_name?: string
+          owner_surrender?: boolean | null
+          phone?: string
+          potential_adopter?: boolean | null
+          processing_application?: boolean | null
+          state?: string
+          street1?: string
+          street2?: string | null
+          updated_at?: string
+          user_id?: string
+          volunteer?: boolean | null
+          zip_code?: string
+        }
+        Relationships: []
+      }
       pets: {
         Row: {
           altered: boolean | null
