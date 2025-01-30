@@ -28,7 +28,7 @@ const PersonTagGroup = ({ form, title, color = "purple", options }: PersonTagGro
             <FormItem className="flex items-center space-x-2">
               <FormControl>
                 <Checkbox
-                  checked={field.value}
+                  checked={field.value || false}
                   onCheckedChange={field.onChange}
                 />
               </FormControl>
