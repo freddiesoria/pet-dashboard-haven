@@ -33,16 +33,16 @@ export function AddPartnerForm() {
     const formData = new FormData(event.currentTarget);
     
     const partnerData = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      phone: formData.get("phone"),
-      street1: formData.get("street1"),
-      street2: formData.get("street2") || null,
-      city: formData.get("city"),
-      state: formData.get("state"),
-      country: formData.get("country"),
-      zip_code: formData.get("zipCode"),
-      organization_type: formData.get("orgType"),
+      name: String(formData.get("name")),
+      email: String(formData.get("email")),
+      phone: String(formData.get("phone")),
+      street1: String(formData.get("street1")),
+      street2: formData.get("street2") ? String(formData.get("street2")) : null,
+      city: String(formData.get("city")),
+      state: String(formData.get("state")),
+      country: String(formData.get("country")),
+      zip_code: String(formData.get("zipCode")),
+      organization_type: String(formData.get("orgType")),
       user_id: (await supabase.auth.getUser()).data.user?.id,
     };
 
