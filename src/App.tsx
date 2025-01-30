@@ -13,6 +13,7 @@ import PetDetails from "./pages/PetDetails";
 import People from "./pages/People";
 import Applications from "./pages/Applications";
 import Partners from "./pages/Partners";
+import PartnerDetails from "./pages/PartnerDetails";
 import Users from "./pages/Users";
 import Reporting from "./pages/Reporting";
 import AddPersonForm from "./components/AddPersonForm";
@@ -39,6 +40,7 @@ const App = () => (
             <Route path="/people/add" element={<AddPersonForm />} />
             <Route path="/applications" element={<Applications />} />
             <Route path="/partners" element={<Partners />} />
+            <Route path="/partners/:id" element={<PartnerDetails />} />
             <Route path="/users" element={<Users />} />
             <Route path="/users/invite" element={<InviteUserForm />} />
             <Route path="/reporting" element={<Reporting />} />

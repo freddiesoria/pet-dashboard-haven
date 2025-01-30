@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/components/ui/use-toast";
 import {
   Dialog,
   DialogContent,
@@ -17,14 +19,58 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft, Building } from "lucide-react";
 import { Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function AddPartnerForm() {
   const [open, setOpen] = useState(false);
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Handle form submission logic here
-    setOpen(false);
+    const formData = new FormData(event.currentTarget);
+    
+    const partnerData = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      phone: formData.get("phone"),
+      street1: formData.get("street1"),
+      street2: formData.get("street2") || null,
+      city: formData.get("city"),
+      state: formData.get("state"),
+      country: formData.get("country"),
+      zip_code: formData.get("zipCode"),
+      organization_type: formData.get("orgType"),
+      user_id: (await supabase.auth.getUser()).data.user?.id,
+    };
+
+    try {
+      const { data, error } = await supabase
+        .from("partners")
+        .insert(partnerData)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Partner has been created successfully.",
+      });
+
+      queryClient.invalidateQueries({ queryKey: ["partners"] });
+      setOpen(false);
+      navigate(`/partners/${data.id}`);
+    } catch (error) {
+      console.error("Error creating partner:", error);
+      toast({
+        title: "Error",
+        description: "There was an error creating the partner.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -55,71 +101,69 @@ export function AddPartnerForm() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="space-y-2">
                 <Label htmlFor="name">Name</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="org1">Organization 1</SelectItem>
-                    <SelectItem value="org2">Organization 2</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Input id="name" name="name" placeholder="Enter organization name" required />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="Enter email" />
+                <Input id="email" name="email" type="email" placeholder="Enter email" required />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone Number</Label>
-                <Input id="phone" type="tel" placeholder="+1" />
+                <Input id="phone" name="phone" type="tel" placeholder="+1" required />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="street1">Street 1</Label>
+                <Input id="street1" name="street1" placeholder="Enter street address" required />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="street2">Street 2</Label>
-                <Input id="street2" placeholder="Enter street address" />
+                <Input id="street2" name="street2" placeholder="Enter street address" />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="city">City</Label>
-                <Input id="city" placeholder="Enter city" />
+                <Input id="city" name="city" placeholder="Enter city" required />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="state">State</Label>
-                <Select>
+                <Select name="state" required>
                   <SelectTrigger>
                     <SelectValue placeholder="Select..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="ca">California</SelectItem>
-                    <SelectItem value="ny">New York</SelectItem>
+                    <SelectItem value="CA">California</SelectItem>
+                    <SelectItem value="NY">New York</SelectItem>
+                    <SelectItem value="TX">Texas</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="country">Country</Label>
-                <Select>
+                <Select name="country" required>
                   <SelectTrigger>
                     <SelectValue placeholder="Select..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="us">United States</SelectItem>
-                    <SelectItem value="ca">Canada</SelectItem>
+                    <SelectItem value="US">United States</SelectItem>
+                    <SelectItem value="CA">Canada</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="zipCode">Zip code</Label>
-                <Input id="zipCode" placeholder="Enter zip code" />
+                <Input id="zipCode" name="zipCode" placeholder="Enter zip code" required />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="orgType">Type of Organization (select all that apply)</Label>
-                <Select>
+                <Label htmlFor="orgType">Type of Organization</Label>
+                <Select name="orgType" required>
                   <SelectTrigger>
                     <SelectValue placeholder="Select..." />
                   </SelectTrigger>

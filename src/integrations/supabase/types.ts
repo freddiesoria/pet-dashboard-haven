@@ -9,6 +9,57 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      partners: {
+        Row: {
+          city: string
+          country: string
+          created_at: string
+          email: string
+          id: string
+          name: string
+          organization_type: string
+          phone: string
+          state: string
+          street1: string
+          street2: string | null
+          updated_at: string
+          user_id: string
+          zip_code: string
+        }
+        Insert: {
+          city: string
+          country: string
+          created_at?: string
+          email: string
+          id?: string
+          name: string
+          organization_type: string
+          phone: string
+          state: string
+          street1: string
+          street2?: string | null
+          updated_at?: string
+          user_id: string
+          zip_code: string
+        }
+        Update: {
+          city?: string
+          country?: string
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          organization_type?: string
+          phone?: string
+          state?: string
+          street1?: string
+          street2?: string | null
+          updated_at?: string
+          user_id?: string
+          zip_code?: string
+        }
+        Relationships: []
+      }
       people: {
         Row: {
           adopt_waitlist: boolean | null
