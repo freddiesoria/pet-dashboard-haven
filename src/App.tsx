@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Pets from "./pages/Pets";
+import PetDetails from "./pages/PetDetails";
 import People from "./pages/People";
 import Applications from "./pages/Applications";
 import Partners from "./pages/Partners";
@@ -33,6 +34,7 @@ const App = () => (
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/pets" element={<Pets />} />
+            <Route path="/pets/:id" element={<PetDetails />} />
             <Route path="/people" element={<People />} />
             <Route path="/people/add" element={<AddPersonForm />} />
             <Route path="/applications" element={<Applications />} />
