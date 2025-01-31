@@ -237,7 +237,28 @@ const PetDetails = () => {
                 </div>
               </Card>
             </TabsContent>
-            <TabsContent value="notes">Notes</TabsContent>
+            <TabsContent value="notes" className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-semibold">Notes</h2>
+                <Button variant="outline" className="gap-2">
+                  <Plus className="h-4 w-4" />
+                  Add Note
+                </Button>
+              </div>
+
+              <Card className="p-6">
+                <div className="flex items-center justify-center h-48">
+                  <div className="text-center space-y-4">
+                    <h3 className="text-xl font-semibold text-purple-700">
+                      Add your first note
+                    </h3>
+                    <p className="text-muted-foreground">
+                      No notes have been added yet
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            </TabsContent>
             <TabsContent value="files">Files</TabsContent>
           </Tabs>
         </div>
