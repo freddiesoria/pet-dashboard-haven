@@ -1,24 +1,17 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import DashboardLayout from "./components/DashboardLayout";
 import Dashboard from "./pages/Dashboard";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Blog from "./pages/Blog";
-import BlogPost from "./pages/BlogPost";
-import BlogManagement from "./pages/BlogManagement";
-import Partners from "./pages/Partners";
-import PartnerDetails from "./pages/PartnerDetails";
-import People from "./pages/People";
-import AddPersonForm from "./components/AddPersonForm";
-import Pets from "./pages/Pets";
-import PetDetails from "./pages/PetDetails";
-import Applications from "./pages/Applications";
-import Users from "./pages/Users";
-import OrganizationSettings from "./pages/OrganizationSettings";
-import Reporting from "./pages/Reporting";
 import Landing from "./pages/Landing";
+import Applications from "./pages/Applications";
+import Reporting from "./pages/Reporting";
 import { Toaster } from "./components/ui/toaster";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AuthRoutes } from "./routes/AuthRoutes";
+import { BlogRoutes } from "./routes/BlogRoutes";
+import { PeopleRoutes } from "./routes/PeopleRoutes";
+import { PartnersRoutes } from "./routes/PartnersRoutes";
+import { PetsRoutes } from "./routes/PetsRoutes";
+import { SettingsRoutes } from "./routes/SettingsRoutes";
 
 const queryClient = new QueryClient();
 
@@ -28,10 +21,8 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Landing />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:slug" element={<BlogPost />} />
+          <AuthRoutes />
+          <BlogRoutes />
           <Route
             path="/dashboard"
             element={
@@ -40,54 +31,9 @@ function App() {
               </DashboardLayout>
             }
           />
-          <Route
-            path="/partners"
-            element={
-              <DashboardLayout>
-                <Partners />
-              </DashboardLayout>
-            }
-          />
-          <Route
-            path="/partners/:id"
-            element={
-              <DashboardLayout>
-                <PartnerDetails />
-              </DashboardLayout>
-            }
-          />
-          <Route
-            path="/people"
-            element={
-              <DashboardLayout>
-                <People />
-              </DashboardLayout>
-            }
-          />
-          <Route
-            path="/people/add"
-            element={
-              <DashboardLayout>
-                <AddPersonForm />
-              </DashboardLayout>
-            }
-          />
-          <Route
-            path="/pets"
-            element={
-              <DashboardLayout>
-                <Pets />
-              </DashboardLayout>
-            }
-          />
-          <Route
-            path="/pets/:id"
-            element={
-              <DashboardLayout>
-                <PetDetails />
-              </DashboardLayout>
-            }
-          />
+          <PartnersRoutes />
+          <PeopleRoutes />
+          <PetsRoutes />
           <Route
             path="/applications"
             element={
@@ -96,35 +42,12 @@ function App() {
               </DashboardLayout>
             }
           />
-          <Route
-            path="/users"
-            element={
-              <DashboardLayout>
-                <Users />
-              </DashboardLayout>
-            }
-          />
-          <Route
-            path="/organization-settings"
-            element={
-              <DashboardLayout>
-                <OrganizationSettings />
-              </DashboardLayout>
-            }
-          />
+          <SettingsRoutes />
           <Route
             path="/reporting"
             element={
               <DashboardLayout>
                 <Reporting />
-              </DashboardLayout>
-            }
-          />
-          <Route
-            path="/blog-management"
-            element={
-              <DashboardLayout>
-                <BlogManagement />
               </DashboardLayout>
             }
           />
