@@ -1,7 +1,7 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, LineChart, Line, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { PieChart } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,18 +12,25 @@ const Reporting = () => {
   const startDate = startOfYear(new Date(currentYear, 0));
   const endDate = endOfYear(new Date(currentYear, 0));
 
-  // Query pets data
+  // Query pets data for the current user
   const { data: pets, isLoading } = useQuery({
     queryKey: ["pets-intake"],
     queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return [];
+
       const { data, error } = await supabase
         .from("pets")
         .select("*")
         .eq("status", "available")
+        .eq("user_id", user.id)
         .gte("intake_date", startDate.toISOString())
         .lte("intake_date", endDate.toISOString());
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching pets:", error);
+        return [];
+      }
       return data;
     },
   });
@@ -83,14 +90,6 @@ const Reporting = () => {
     },
   };
 
-  // Sample data for the other charts (you can replace this with real data later)
-  const sampleTimelineData = [
-    { name: "Jan", value: 10 },
-    { name: "Feb", value: 15 },
-    { name: "Mar", value: 8 },
-    // Add more months as needed
-  ];
-
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2">
@@ -116,9 +115,9 @@ const Reporting = () => {
                 <div className="h-full flex items-center justify-center">
                   <p className="text-purple-600">Loading data...</p>
                 </div>
-              ) : chartData.length === 0 ? (
+              ) : pets?.length === 0 ? (
                 <div className="h-full flex items-center justify-center">
-                  <p className="text-purple-600">No pets returned for that filter set.</p>
+                  <p className="text-purple-600">No pets found for your account.</p>
                 </div>
               ) : (
                 <ChartContainer config={chartConfig}>
