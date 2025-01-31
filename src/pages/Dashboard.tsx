@@ -113,7 +113,7 @@ const Dashboard = () => {
             <p>
               Click here to find helpful articles on{" "}
               <Link to="/help" className="text-primary hover:underline">
-                how to use Pawlytics
+                how to use Animal Shelter Software
               </Link>
             </p>
             <p>Wondering what we are working on? See what we are developing for you!</p>
