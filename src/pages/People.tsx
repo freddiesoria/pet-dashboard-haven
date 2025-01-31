@@ -20,12 +20,19 @@ const People = () => {
   const { data: people, isLoading } = useQuery({
     queryKey: ["people"],
     queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return [];
+
       const { data, error } = await supabase
         .from("people")
         .select("*")
+        .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching people:", error);
+        return [];
+      }
       return data;
     },
   });
@@ -73,31 +80,39 @@ const People = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {people?.map((person) => (
-                <TableRow key={person.id}>
-                  <TableCell>
-                    {person.first_name} {person.last_name}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2 flex-wrap">
-                      {getAdopterTags(person).map((tag) => (
-                        <Badge key={tag} variant="secondary">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2 flex-wrap">
-                      {getFosterTags(person).map((tag) => (
-                        <Badge key={tag} variant="secondary">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
+              {people?.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={3} className="text-center py-8">
+                    No people found. Add your first person using the button above.
                   </TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                people?.map((person) => (
+                  <TableRow key={person.id}>
+                    <TableCell>
+                      {person.first_name} {person.last_name}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-2 flex-wrap">
+                        {getAdopterTags(person).map((tag) => (
+                          <Badge key={tag} variant="secondary">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-2 flex-wrap">
+                        {getFosterTags(person).map((tag) => (
+                          <Badge key={tag} variant="secondary">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         )}

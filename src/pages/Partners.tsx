@@ -19,12 +19,19 @@ const Partners = () => {
   const { data: partners, isLoading } = useQuery({
     queryKey: ["partners"],
     queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return [];
+
       const { data, error } = await supabase
         .from("partners")
         .select("*")
+        .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching partners:", error);
+        return [];
+      }
       return data;
     },
   });
@@ -36,19 +43,31 @@ const Partners = () => {
         <AddPartnerForm />
       </div>
       <Card className="p-6">
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Organization</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Phone</TableHead>
+              <TableHead>Address</TableHead>
+              <TableHead>Type</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {isLoading ? (
               <TableRow>
-                <TableHead>Organization</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Phone</TableHead>
-                <TableHead>Address</TableHead>
-                <TableHead>Type</TableHead>
+                <TableCell colSpan={5} className="text-center">
+                  Loading...
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {partners?.map((partner) => (
+            ) : partners?.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center">
+                  No partners found. Add your first partner using the button above.
+                </TableCell>
+              </TableRow>
+            ) : (
+              partners?.map((partner) => (
                 <TableRow
                   key={partner.id}
                   className="cursor-pointer"
@@ -67,10 +86,10 @@ const Partners = () => {
                   </TableCell>
                   <TableCell>{partner.organization_type}</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+              ))
+            )}
+          </TableBody>
+        </Table>
       </Card>
     </div>
   );

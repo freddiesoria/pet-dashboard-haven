@@ -14,10 +14,23 @@ import {
 import { useSidebar } from "@/components/ui/sidebar";
 import UserProfile from "./UserProfile";
 import { Button } from "./ui/button";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const DashboardSidebar = () => {
   const { pathname } = useLocation();
   const { state, setOpen } = useSidebar();
+
+  // Query to get current user's email
+  const { data: userEmail } = useQuery({
+    queryKey: ["current-user-email"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      return user?.email;
+    },
+  });
+
+  const isSuperAdmin = userEmail === "info@hoozzee.com";
 
   const navigationItems = [
     { icon: Home, label: "Dashboard", path: "/dashboard" },
@@ -25,7 +38,7 @@ const DashboardSidebar = () => {
     { icon: Users, label: "People", path: "/people" },
     { icon: PawPrint, label: "Pets", path: "/pets" },
     { icon: ClipboardList, label: "Applications", path: "/applications" },
-    { icon: FileText, label: "Blog Management", path: "/blog-management" },
+    ...(isSuperAdmin ? [{ icon: FileText, label: "Blog Management", path: "/blog-management" }] : []),
     { icon: BarChart, label: "Reporting", path: "/reporting" },
     { icon: Settings, label: "Organization Settings", path: "/organization-settings" },
   ];

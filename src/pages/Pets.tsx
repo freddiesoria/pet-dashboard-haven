@@ -20,12 +20,19 @@ const Pets = () => {
   const { data: pets, isLoading } = useQuery({
     queryKey: ["pets"],
     queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return [];
+
       const { data, error } = await supabase
         .from("pets")
         .select("*")
+        .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching pets:", error);
+        return [];
+      }
       return data;
     },
   });
@@ -56,7 +63,7 @@ const Pets = () => {
             ) : pets?.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={4} className="text-center">
-                  No pets found
+                  No pets found. Add your first pet using the button above.
                 </TableCell>
               </TableRow>
             ) : (
