@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChevronLeft, Edit, Plus } from "lucide-react";
 import { format } from "date-fns";
+import { Badge } from "@/components/ui/badge";
 
 const PetDetails = () => {
   const { id } = useParams();
@@ -192,7 +193,50 @@ const PetDetails = () => {
                 </div>
               </Card>
             </TabsContent>
-            <TabsContent value="medical">Medical information</TabsContent>
+            <TabsContent value="medical" className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-semibold">Medical Events</h2>
+                <Button variant="outline" className="gap-2">
+                  <Plus className="h-4 w-4" />
+                  Quick Add Medical Event
+                </Button>
+              </div>
+
+              <div className="flex flex-wrap gap-4">
+                <Card className="p-4">
+                  <div className="space-y-1">
+                    <span className="text-sm text-muted-foreground">Weight</span>
+                    <p className="font-medium">
+                      {pet.weight ? `${pet.weight} ${pet.weight_unit}` : "Unknown"}
+                    </p>
+                  </div>
+                </Card>
+
+                <Card className="p-4">
+                  <div className="space-y-1">
+                    <span className="text-sm text-muted-foreground">Age</span>
+                    <p className="font-medium">
+                      {pet.date_of_birth
+                        ? format(new Date(pet.date_of_birth), "MM/dd/yyyy")
+                        : "Unknown"}
+                    </p>
+                  </div>
+                </Card>
+              </div>
+
+              <Card className="p-6">
+                <div className="flex items-center justify-center h-48">
+                  <div className="text-center space-y-4">
+                    <h3 className="text-xl font-semibold text-purple-700">
+                      Add medical records and information
+                    </h3>
+                    <p className="text-muted-foreground">
+                      No medical records have been added yet
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            </TabsContent>
             <TabsContent value="notes">Notes</TabsContent>
             <TabsContent value="files">Files</TabsContent>
           </Tabs>
