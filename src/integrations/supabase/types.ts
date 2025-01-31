@@ -11,49 +11,42 @@ export type Database = {
     Tables: {
       blog_posts: {
         Row: {
-          id: string
-          title: string
-          slug: string
+          author_id: string
           content: string
+          created_at: string
           excerpt: string | null
           featured_image: string | null
-          published: boolean
-          author_id: string
-          created_at: string
+          id: string
+          published: boolean | null
+          slug: string
+          title: string
           updated_at: string
         }
         Insert: {
-          id?: string
-          title: string
-          slug: string
+          author_id: string
           content: string
+          created_at?: string
           excerpt?: string | null
           featured_image?: string | null
-          published?: boolean
-          author_id: string
-          created_at?: string
+          id?: string
+          published?: boolean | null
+          slug: string
+          title: string
           updated_at?: string
         }
         Update: {
-          id?: string
-          title?: string
-          slug?: string
+          author_id?: string
           content?: string
+          created_at?: string
           excerpt?: string | null
           featured_image?: string | null
-          published?: boolean
-          author_id?: string
-          created_at?: string
+          id?: string
+          published?: boolean | null
+          slug?: string
+          title?: string
           updated_at?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "blog_posts_author_id_fkey"
-            columns: ["author_id"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
-        ]
+        Relationships: []
       }
       partners: {
         Row: {
@@ -422,4 +415,3 @@ export type CompositeTypes<
   : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
     ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
-
