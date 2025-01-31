@@ -5,8 +5,19 @@ import { Button } from "@/components/ui/button";
 import { Upload } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { LocalizationSettingsForm } from "@/components/organization/LocalizationSettingsForm";
+import { useState } from "react";
 
 const OrganizationSettings = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  
   const { data: profile } = useQuery({
     queryKey: ["user-profile"],
     queryFn: async () => {
@@ -141,9 +152,19 @@ const OrganizationSettings = () => {
           <Card className="p-6">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold">Localization Settings</h2>
-              <Button variant="link" className="text-primary">
-                Edit
-              </Button>
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="link" className="text-primary">
+                    Edit
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Edit Localization Settings</DialogTitle>
+                  </DialogHeader>
+                  <LocalizationSettingsForm onSuccess={() => setIsDialogOpen(false)} />
+                </DialogContent>
+              </Dialog>
             </div>
             <div className="space-y-4">
               <div>
