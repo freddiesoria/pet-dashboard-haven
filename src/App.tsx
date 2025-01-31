@@ -9,6 +9,7 @@ import BlogManagement from "./pages/BlogManagement";
 import Partners from "./pages/Partners";
 import PartnerDetails from "./pages/PartnerDetails";
 import People from "./pages/People";
+import AddPersonForm from "./components/AddPersonForm";
 import Pets from "./pages/Pets";
 import PetDetails from "./pages/PetDetails";
 import Applications from "./pages/Applications";
@@ -60,6 +61,14 @@ function App() {
             element={
               <DashboardLayout>
                 <People />
+              </DashboardLayout>
+            }
+          />
+          <Route
+            path="/people/add"
+            element={
+              <DashboardLayout>
+                <AddPersonForm />
               </DashboardLayout>
             }
           />
