@@ -12,7 +12,6 @@ import { PeopleRoutes } from "./routes/PeopleRoutes";
 import { PartnersRoutes } from "./routes/PartnersRoutes";
 import { PetsRoutes } from "./routes/PetsRoutes";
 import { SettingsRoutes } from "./routes/SettingsRoutes";
-import { Fragment } from "react";
 
 const queryClient = new QueryClient();
 
@@ -22,12 +21,8 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Landing />} />
-          <Fragment>
-            <AuthRoutes />
-          </Fragment>
-          <Fragment>
-            <BlogRoutes />
-          </Fragment>
+          <AuthRoutes />
+          <BlogRoutes />
           <Route
             path="/dashboard"
             element={
@@ -36,15 +31,9 @@ function App() {
               </DashboardLayout>
             }
           />
-          <Fragment>
-            <PartnersRoutes />
-          </Fragment>
-          <Fragment>
-            <PeopleRoutes />
-          </Fragment>
-          <Fragment>
-            <PetsRoutes />
-          </Fragment>
+          <PartnersRoutes />
+          <PeopleRoutes />
+          <PetsRoutes />
           <Route
             path="/applications"
             element={
@@ -53,9 +42,7 @@ function App() {
               </DashboardLayout>
             }
           />
-          <Fragment>
-            <SettingsRoutes />
-          </Fragment>
+          <SettingsRoutes />
           <Route
             path="/reporting"
             element={
