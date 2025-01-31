@@ -2,15 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { LineChart, Line, ResponsiveContainer } from "recharts";
 import { Link } from "react-router-dom";
-
-const data = [
-  { value: 10 },
-  { value: 15 },
-  { value: 20 },
-  { value: 25 },
-  { value: 30 },
-  { value: 40 },
-];
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const StatCard = ({ title, value, color }: { title: string; value: number; color: string }) => (
   <Card className="relative overflow-hidden">
@@ -21,7 +14,7 @@ const StatCard = ({ title, value, color }: { title: string; value: number; color
       <div className="text-2xl font-bold">{value}</div>
       <div className="h-[80px] w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data}>
+          <LineChart data={[{ value: value }]}>
             <Line
               type="monotone"
               dataKey="value"
@@ -37,6 +30,30 @@ const StatCard = ({ title, value, color }: { title: string; value: number; color
 );
 
 const Dashboard = () => {
+  const { data: petStats } = useQuery({
+    queryKey: ["petStats"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return null;
+
+      const { data: stats, error } = await supabase
+        .from('pets')
+        .select('status')
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+
+      return {
+        intake: stats.filter(pet => 
+          ['stray', 'surrender', 'transfer', 'born_in_care', 'return_to_rescue', 'other'].includes(pet.intake_type)
+        ).length,
+        adopted: stats.filter(pet => pet.status === 'adopted').length,
+        transferred: stats.filter(pet => pet.status === 'pending_transfer').length,
+        euthanized: stats.filter(pet => pet.status === 'euthanized').length,
+      };
+    },
+  });
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex items-center justify-between">
@@ -57,10 +74,10 @@ const Dashboard = () => {
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <StatCard title="Intake" value={0} color="#9b87f5" />
-          <StatCard title="Adopted" value={0} color="#60A5FA" />
-          <StatCard title="Transferred" value={0} color="#FFA07A" />
-          <StatCard title="Euthanized" value={0} color="#F87171" />
+          <StatCard title="Intake" value={petStats?.intake || 0} color="#9b87f5" />
+          <StatCard title="Adopted" value={petStats?.adopted || 0} color="#60A5FA" />
+          <StatCard title="Transferred" value={petStats?.transferred || 0} color="#FFA07A" />
+          <StatCard title="Euthanized" value={petStats?.euthanized || 0} color="#F87171" />
         </div>
       </div>
 

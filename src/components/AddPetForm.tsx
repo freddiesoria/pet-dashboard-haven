@@ -175,7 +175,12 @@ export function AddPetForm() {
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label htmlFor="petName">Pet Name</Label>
-                <Input id="petName" placeholder="Enter pet name" />
+                <Input 
+                  id="petName" 
+                  placeholder="Enter pet name"
+                  value={formData.petName}
+                  onChange={handleInputChange}
+                />
               </div>
 
               <div className="space-y-2">
@@ -185,7 +190,7 @@ export function AddPetForm() {
 
               <div className="space-y-2">
                 <Label htmlFor="status">Status</Label>
-                <Select>
+                <Select onValueChange={(value) => handleSelectChange(value, 'status')}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a status" />
                   </SelectTrigger>
@@ -193,18 +198,29 @@ export function AddPetForm() {
                     <SelectItem value="available">Available</SelectItem>
                     <SelectItem value="adopted">Adopted</SelectItem>
                     <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="quarantine">Quarantine</SelectItem>
+                    <SelectItem value="sanctuary">Sanctuary</SelectItem>
+                    <SelectItem value="pending_transfer">Pending Transfer</SelectItem>
+                    <SelectItem value="pending_adoption">Pending Adoption</SelectItem>
+                    <SelectItem value="reclaimed">Reclaimed</SelectItem>
+                    <SelectItem value="medical_hold">Medical Hold</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="dateOfBirth">Date of Birth</Label>
-                <Input id="dateOfBirth" type="date" />
+                <Input 
+                  id="dateOfBirth" 
+                  type="date"
+                  value={formData.dateOfBirth}
+                  onChange={handleInputChange}
+                />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="gender">Gender</Label>
-                <Select>
+                <Select onValueChange={(value) => handleSelectChange(value, 'gender')}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a gender" />
                   </SelectTrigger>
@@ -217,7 +233,7 @@ export function AddPetForm() {
 
               <div className="space-y-2">
                 <Label htmlFor="altered">Altered</Label>
-                <Select>
+                <Select onValueChange={(value) => handleSelectChange(value, 'altered')}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select..." />
                   </SelectTrigger>
@@ -231,11 +247,21 @@ export function AddPetForm() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="weight">Weight</Label>
-                  <Input id="weight" type="number" min="0" step="0.1" />
+                  <Input 
+                    id="weight" 
+                    type="number" 
+                    min="0" 
+                    step="0.1"
+                    value={formData.weight}
+                    onChange={handleInputChange}
+                  />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="unit">Unit</Label>
-                  <Select defaultValue="lbs">
+                  <Label htmlFor="weightUnit">Unit</Label>
+                  <Select 
+                    defaultValue="lbs"
+                    onValueChange={(value) => handleSelectChange(value, 'weightUnit')}
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -249,13 +275,16 @@ export function AddPetForm() {
 
               <div className="space-y-2">
                 <Label htmlFor="species">Species</Label>
-                <Select>
+                <Select onValueChange={(value) => handleSelectChange(value, 'species')}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a species" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="dog">Dog</SelectItem>
                     <SelectItem value="cat">Cat</SelectItem>
+                    <SelectItem value="rabbit">Rabbit</SelectItem>
+                    <SelectItem value="guinea_pig">Guinea Pig</SelectItem>
+                    <SelectItem value="small_animal">Small Animal</SelectItem>
                     <SelectItem value="other">Other</SelectItem>
                   </SelectContent>
                 </Select>
@@ -263,7 +292,7 @@ export function AddPetForm() {
 
               <div className="space-y-2">
                 <Label htmlFor="breed">Breed</Label>
-                <Select>
+                <Select onValueChange={(value) => handleSelectChange(value, 'breed')}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a breed" />
                   </SelectTrigger>
@@ -276,12 +305,17 @@ export function AddPetForm() {
 
               <div className="space-y-2">
                 <Label htmlFor="microchipNumber">Microchip Number</Label>
-                <Input id="microchipNumber" placeholder="Enter microchip number" />
+                <Input 
+                  id="microchipNumber" 
+                  placeholder="Enter microchip number"
+                  value={formData.microchipNumber}
+                  onChange={handleInputChange}
+                />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="intakeType">Intake Type</Label>
-                <Select>
+                <Select onValueChange={(value) => handleSelectChange(value, 'intakeType')}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select..." />
                   </SelectTrigger>
@@ -289,75 +323,68 @@ export function AddPetForm() {
                     <SelectItem value="stray">Stray</SelectItem>
                     <SelectItem value="surrender">Surrender</SelectItem>
                     <SelectItem value="transfer">Transfer</SelectItem>
+                    <SelectItem value="born_in_care">Born in Care</SelectItem>
+                    <SelectItem value="return_to_rescue">Return to Rescue</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="intakeDate">Intake Date</Label>
-                <Input id="intakeDate" type="date" />
+              <div className="col-span-2 border-2 border-dashed border-muted rounded-lg p-6 text-center space-y-4">
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="hidden"
+                  id="pet-image"
+                />
+                <Label
+                  htmlFor="pet-image"
+                  className="flex flex-col items-center gap-2 cursor-pointer"
+                >
+                  <div className="bg-muted/50 p-4 rounded-full">
+                    <Upload className="h-6 w-6" />
+                  </div>
+                  <div className="text-sm">
+                    {selectedFile ? (
+                      <span className="text-primary">{selectedFile.name}</span>
+                    ) : (
+                      <>Click to upload or drag and drop</>
+                    )}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    PNG, JPG or GIF (max. 5MB)
+                  </div>
+                </Label>
+                {selectedFile && (
+                  <div className="mt-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSelectedFile(null)}
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                )}
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="conditionOnIntake">Condition on Intake</Label>
-                <Input id="conditionOnIntake" placeholder="Enter condition" />
+              <div className="flex justify-end gap-4">
+                <Button 
+                  type="submit" 
+                  variant="secondary"
+                  disabled={isUploading}
+                >
+                  {isUploading ? "Saving..." : "Save"}
+                </Button>
+                <Button 
+                  type="button"
+                  disabled={isUploading}
+                >
+                  Save and Add Another
+                </Button>
               </div>
-            </div>
-
-            <div className="col-span-2 border-2 border-dashed border-muted rounded-lg p-6 text-center space-y-4">
-              <Input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="hidden"
-                id="pet-image"
-              />
-              <Label
-                htmlFor="pet-image"
-                className="flex flex-col items-center gap-2 cursor-pointer"
-              >
-                <div className="bg-muted/50 p-4 rounded-full">
-                  <Upload className="h-6 w-6" />
-                </div>
-                <div className="text-sm">
-                  {selectedFile ? (
-                    <span className="text-primary">{selectedFile.name}</span>
-                  ) : (
-                    <>Click to upload or drag and drop</>
-                  )}
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  PNG, JPG or GIF (max. 5MB)
-                </div>
-              </Label>
-              {selectedFile && (
-                <div className="mt-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setSelectedFile(null)}
-                  >
-                    Remove
-                  </Button>
-                </div>
-              )}
-            </div>
-
-            <div className="flex justify-end gap-4">
-              <Button 
-                type="submit" 
-                variant="secondary"
-                disabled={isUploading}
-              >
-                {isUploading ? "Saving..." : "Save"}
-              </Button>
-              <Button 
-                type="button"
-                disabled={isUploading}
-              >
-                Save and Add Another
-              </Button>
             </div>
           </form>
         </DialogContent>
