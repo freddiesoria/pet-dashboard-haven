@@ -3,12 +3,30 @@ import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Upload } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const OrganizationSettings = () => {
+  const { data: profile } = useQuery({
+    queryKey: ["user-profile"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("No user found");
+      
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
+      
+      return profile;
+    },
+  });
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Citics Solutions S.L.</h1>
+        <h1 className="text-3xl font-bold">Organization Settings</h1>
       </div>
 
       <Tabs defaultValue="overview" className="space-y-4">
@@ -29,7 +47,7 @@ const OrganizationSettings = () => {
                   <div className="space-y-2">
                     <div>
                       <span className="text-sm text-muted-foreground">Name</span>
-                      <p>Citics Solutions S.L.</p>
+                      <p>-</p>
                     </div>
                     <div>
                       <span className="text-sm text-muted-foreground">Website</span>
@@ -37,17 +55,15 @@ const OrganizationSettings = () => {
                     </div>
                     <div>
                       <span className="text-sm text-muted-foreground">Phone</span>
-                      <p>N/A</p>
+                      <p>-</p>
                     </div>
                     <div>
                       <span className="text-sm text-muted-foreground">Email</span>
-                      <p className="text-primary">info@hoozzee.com</p>
+                      <p className="text-primary">{profile?.email}</p>
                     </div>
                     <div>
                       <span className="text-sm text-muted-foreground">Address</span>
-                      <p>Joan de Joanes 1</p>
-                      <p>Frankfurt, Hessen 60385</p>
-                      <p>Germany</p>
+                      <p>-</p>
                     </div>
                   </div>
                 </div>

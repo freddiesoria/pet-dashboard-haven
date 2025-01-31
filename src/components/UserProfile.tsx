@@ -9,18 +9,30 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const UserProfile = () => {
   const navigate = useNavigate();
-  const user = {
-    name: "John Doe",
-    email: "john@example.com",
-    role: "Admin",
-    avatarUrl: null,
-  };
 
-  const handleLogout = () => {
-    // Handle logout logic here
+  const { data: profile } = useQuery({
+    queryKey: ["user-profile"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("No user found");
+      
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
+      
+      return profile;
+    },
+  });
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
     navigate("/login");
   };
 
@@ -29,24 +41,21 @@ const UserProfile = () => {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarImage src={user.avatarUrl || ""} alt={user.name} />
-            <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+            <AvatarImage src={profile?.avatar_url || ""} alt={profile?.full_name || profile?.email} />
+            <AvatarFallback>{profile?.email?.[0]?.toUpperCase()}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{user.name}</p>
-            <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+            <p className="text-sm font-medium leading-none">{profile?.full_name || "User"}</p>
+            <p className="text-xs leading-none text-muted-foreground">{profile?.email}</p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => navigate("/profile")}>
-          Profile
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => navigate("/settings")}>
-          Settings
+        <DropdownMenuItem onClick={() => navigate("/organization-settings")}>
+          Organization Settings
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout}>
