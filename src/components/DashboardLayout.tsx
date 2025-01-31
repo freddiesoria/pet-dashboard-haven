@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import DashboardSidebar from "./DashboardSidebar";
 import { useToast } from "./ui/use-toast";
@@ -8,7 +8,11 @@ import { Button } from "./ui/button";
 import { addDays, isPast } from "date-fns";
 import { SidebarProvider } from "@/components/ui/sidebar";
 
-const DashboardLayout = () => {
+interface DashboardLayoutProps {
+  children: React.ReactNode;
+}
+
+const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const [session, setSession] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [trialExpired, setTrialExpired] = useState(false);
@@ -161,7 +165,7 @@ const DashboardLayout = () => {
       <div className="flex min-h-screen w-full">
         <DashboardSidebar />
         <main className="flex-1 p-8">
-          <Outlet />
+          {children}
         </main>
       </div>
     </SidebarProvider>

@@ -6,12 +6,12 @@ import UserProfile from "./UserProfile";
 
 const DashboardSidebar = () => {
   const { pathname } = useLocation();
-  const { isOpen } = useSidebar();
+  const { state } = useSidebar();
 
   return (
     <aside className={cn(
       "fixed left-0 top-0 z-40 h-screen w-64 border-r bg-background transition-transform",
-      !isOpen && "-translate-x-full"
+      state === "collapsed" && "-translate-x-full"
     )}>
       <div className="space-y-4 py-4">
         <div className="px-3 py-2">
