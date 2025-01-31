@@ -12,23 +12,24 @@ import { TagSelect } from "./TagSelect";
 import { useUserRole } from "@/hooks/useUserRole";
 
 interface BlogPostFormProps {
-  initialData?: any;
+  post?: any;
   isEditing?: boolean;
+  onSuccess?: () => void;
 }
 
-export function BlogPostForm({ initialData, isEditing }: BlogPostFormProps) {
+export function BlogPostForm({ post, isEditing, onSuccess }: BlogPostFormProps) {
   const { isAdmin, isEditor } = useUserRole();
-  const [content, setContent] = useState(initialData?.content || "");
-  const [categories, setCategories] = useState<string[]>(initialData?.categories || []);
-  const [tags, setTags] = useState<string[]>(initialData?.tags || []);
+  const [content, setContent] = useState(post?.content || "");
+  const [categories, setCategories] = useState<string[]>(post?.categories || []);
+  const [tags, setTags] = useState<string[]>(post?.tags || []);
   const { toast } = useToast();
   const navigate = useNavigate();
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
-      title: initialData?.title || "",
-      slug: initialData?.slug || "",
-      excerpt: initialData?.excerpt || "",
+      title: post?.title || "",
+      slug: post?.slug || "",
+      excerpt: post?.excerpt || "",
     },
   });
 
@@ -52,17 +53,17 @@ export function BlogPostForm({ initialData, isEditing }: BlogPostFormProps) {
         author_id: user.id,
       };
 
-      let post;
+      let savedPost;
       if (isEditing) {
         const { data, error } = await supabase
           .from("blog_posts")
           .update(postData)
-          .eq("id", initialData.id)
+          .eq("id", post.id)
           .select()
           .single();
 
         if (error) throw error;
-        post = data;
+        savedPost = data;
       } else {
         const { data, error } = await supabase
           .from("blog_posts")
@@ -71,13 +72,13 @@ export function BlogPostForm({ initialData, isEditing }: BlogPostFormProps) {
           .single();
 
         if (error) throw error;
-        post = data;
+        savedPost = data;
       }
 
       // Handle categories
       if (categories.length > 0) {
         const categoryLinks = categories.map(categoryId => ({
-          post_id: post.id,
+          post_id: savedPost.id,
           category_id: categoryId,
         }));
 
@@ -85,7 +86,7 @@ export function BlogPostForm({ initialData, isEditing }: BlogPostFormProps) {
           await supabase
             .from("post_categories")
             .delete()
-            .eq("post_id", post.id);
+            .eq("post_id", savedPost.id);
         }
 
         const { error: categoryError } = await supabase
@@ -98,7 +99,7 @@ export function BlogPostForm({ initialData, isEditing }: BlogPostFormProps) {
       // Handle tags
       if (tags.length > 0) {
         const tagLinks = tags.map(tagId => ({
-          post_id: post.id,
+          post_id: savedPost.id,
           tag_id: tagId,
         }));
 
@@ -106,7 +107,7 @@ export function BlogPostForm({ initialData, isEditing }: BlogPostFormProps) {
           await supabase
             .from("post_tags")
             .delete()
-            .eq("post_id", post.id);
+            .eq("post_id", savedPost.id);
         }
 
         const { error: tagError } = await supabase
@@ -121,6 +122,7 @@ export function BlogPostForm({ initialData, isEditing }: BlogPostFormProps) {
         description: isEditing ? "Post updated successfully" : "Post created successfully",
       });
 
+      onSuccess?.();
       navigate("/blog-management");
     } catch (error: any) {
       toast({
@@ -140,7 +142,7 @@ export function BlogPostForm({ initialData, isEditing }: BlogPostFormProps) {
           {...register("title", { required: "Title is required" })}
         />
         {errors.title && (
-          <p className="text-sm text-red-500">{errors.title.message}</p>
+          <p className="text-sm text-red-500">{String(errors.title.message)}</p>
         )}
       </div>
 
@@ -151,7 +153,7 @@ export function BlogPostForm({ initialData, isEditing }: BlogPostFormProps) {
           {...register("slug", { required: "Slug is required" })}
         />
         {errors.slug && (
-          <p className="text-sm text-red-500">{errors.slug.message}</p>
+          <p className="text-sm text-red-500">{String(errors.slug.message)}</p>
         )}
       </div>
 

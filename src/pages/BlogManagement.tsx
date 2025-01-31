@@ -97,7 +97,11 @@ const BlogManagement = () => {
                         Make changes to your blog post.
                       </DialogDescription>
                     </DialogHeader>
-                    <BlogPostForm post={post} onSuccess={() => refetch()} />
+                    <BlogPostForm 
+                      post={post} 
+                      isEditing={true}
+                      onSuccess={() => refetch()} 
+                    />
                   </DialogContent>
                 </Dialog>
                 <Button
