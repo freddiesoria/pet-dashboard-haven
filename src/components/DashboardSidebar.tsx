@@ -17,7 +17,7 @@ import { Button } from "./ui/button";
 
 const DashboardSidebar = () => {
   const { pathname } = useLocation();
-  const { state, dispatch } = useSidebar();
+  const { state, setOpen } = useSidebar();
 
   const navigationItems = [
     { icon: Home, label: "Dashboard", path: "/dashboard" },
@@ -36,7 +36,7 @@ const DashboardSidebar = () => {
         variant="ghost"
         size="icon"
         className="fixed top-4 left-4 z-50 md:hidden"
-        onClick={() => dispatch({ type: state === "expanded" ? "collapse" : "expand" })}
+        onClick={() => setOpen(state === "expanded" ? false : true)}
       >
         <Menu className="h-6 w-6" />
       </Button>
