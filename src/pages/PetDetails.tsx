@@ -4,7 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ChevronLeft, Edit } from "lucide-react";
+import { ChevronLeft, Edit, Plus } from "lucide-react";
+import { format } from "date-fns";
 
 const PetDetails = () => {
   const { id } = useParams();
@@ -148,7 +149,49 @@ const PetDetails = () => {
                 </div>
               </Card>
             </TabsContent>
-            <TabsContent value="intake">Intake/Outcome information</TabsContent>
+            <TabsContent value="intake" className="space-y-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-semibold">Intake/Outcome</h2>
+                <Button variant="outline">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Outcome Event
+                </Button>
+              </div>
+
+              <Card className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold">Intake Information</h3>
+                  <Button variant="ghost" size="sm">
+                    <Edit className="h-4 w-4 mr-2" />
+                    Edit
+                  </Button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div>
+                    <label className="text-sm text-muted-foreground block mb-1">
+                      Intake Type
+                    </label>
+                    <p>{pet.intake_type || "Other"}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm text-muted-foreground block mb-1">
+                      Intake Date and Time
+                    </label>
+                    <p>
+                      {pet.intake_date
+                        ? format(new Date(pet.intake_date), "MM/dd/yyyy")
+                        : "Not specified"}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-sm text-muted-foreground block mb-1">
+                      Condition on Intake
+                    </label>
+                    <p>{pet.condition_on_intake || "Not specified"}</p>
+                  </div>
+                </div>
+              </Card>
+            </TabsContent>
             <TabsContent value="medical">Medical information</TabsContent>
             <TabsContent value="notes">Notes</TabsContent>
             <TabsContent value="files">Files</TabsContent>
