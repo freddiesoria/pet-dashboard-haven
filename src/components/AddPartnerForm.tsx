@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import {
   Dialog,
@@ -10,17 +8,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { ArrowLeft, Building } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
+import { PartnerOrgFields } from "./partner/PartnerOrgFields";
+import { PartnerContactFields } from "./partner/PartnerContactFields";
+import { PartnerAddressFields } from "./partner/PartnerAddressFields";
 
 export function AddPartnerForm() {
   const [open, setOpen] = useState(false);
@@ -99,81 +93,9 @@ export function AddPartnerForm() {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
-                <Input id="name" name="name" placeholder="Enter organization name" required />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" name="email" type="email" placeholder="Enter email" required />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number</Label>
-                <Input id="phone" name="phone" type="tel" placeholder="+1" required />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="street1">Street 1</Label>
-                <Input id="street1" name="street1" placeholder="Enter street address" required />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="street2">Street 2</Label>
-                <Input id="street2" name="street2" placeholder="Enter street address" />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="city">City</Label>
-                <Input id="city" name="city" placeholder="Enter city" required />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="state">State</Label>
-                <Select name="state" required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="CA">California</SelectItem>
-                    <SelectItem value="NY">New York</SelectItem>
-                    <SelectItem value="TX">Texas</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="country">Country</Label>
-                <Select name="country" required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="US">United States</SelectItem>
-                    <SelectItem value="CA">Canada</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="zipCode">Zip code</Label>
-                <Input id="zipCode" name="zipCode" placeholder="Enter zip code" required />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="orgType">Type of Organization</Label>
-                <Select name="orgType" required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="shelter">Shelter</SelectItem>
-                    <SelectItem value="rescue">Rescue</SelectItem>
-                    <SelectItem value="sanctuary">Sanctuary</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              <PartnerOrgFields />
+              <PartnerContactFields />
+              <PartnerAddressFields />
             </div>
 
             <div className="flex justify-end">
