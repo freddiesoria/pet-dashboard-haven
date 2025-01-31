@@ -21,6 +21,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Landing />} />
+          {/* Render the routes from each route component */}
           <AuthRoutes />
           <BlogRoutes />
           <Route
