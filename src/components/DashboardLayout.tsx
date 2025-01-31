@@ -168,7 +168,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     <SidebarProvider>
       <div className="flex min-h-screen w-full bg-background">
         <DashboardSidebar />
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 md:ml-64 transition-all duration-200 ease-in-out">
           <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
             {children}
           </div>

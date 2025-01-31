@@ -42,7 +42,7 @@ const DashboardSidebar = () => {
       </Button>
 
       <aside className={cn(
-        "fixed left-0 top-0 z-40 h-screen w-64 border-r bg-background transition-transform duration-200 ease-in-out",
+        "fixed left-0 top-0 z-40 h-screen w-64 border-r bg-background transition-transform duration-200 ease-in-out overflow-y-auto",
         state === "collapsed" && "-translate-x-full md:translate-x-0 md:w-20"
       )}>
         <div className="flex flex-col h-full">
