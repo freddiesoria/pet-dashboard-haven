@@ -64,7 +64,7 @@ const DashboardSidebar = () => {
               "text-xl font-bold transition-opacity duration-200",
               state === "collapsed" && "md:opacity-0"
             )}>
-              Pawlytics
+              Animal Shelter Software
             </h1>
           </div>
 

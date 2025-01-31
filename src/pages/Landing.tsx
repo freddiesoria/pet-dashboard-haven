@@ -7,7 +7,7 @@ const Landing = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 font-cabinet">
       <nav className="container mx-auto px-6 py-6 flex justify-between items-center">
-        <div className="text-2xl font-bold text-blue-600">PetHaven</div>
+        <div className="text-2xl font-bold text-blue-600">Animal Shelter Software</div>
         <div className="space-x-4">
           <Link to="/blog">
             <Button variant="ghost" className="hover:bg-blue-100">
