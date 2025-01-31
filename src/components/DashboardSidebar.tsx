@@ -1,62 +1,50 @@
-import { PawPrint, Users, FileText, Building2, UserCircle, BarChart3 } from 'lucide-react';
-import { useLocation, Link } from 'react-router-dom';
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
-
-const menuItems = [
-  { title: "Pets", icon: PawPrint, path: "/pets" },
-  { title: "People", icon: Users, path: "/people" },
-  { title: "Applications", icon: FileText, path: "/applications" },
-  { title: "Partners", icon: Building2, path: "/partners" },
-  { title: "Users", icon: UserCircle, path: "/users" },
-  { title: "Reporting", icon: BarChart3, path: "/reporting" },
-];
+import { cn } from "@/lib/utils";
+import { Link, useLocation } from "react-router-dom";
+import { Home, FileText } from "lucide-react";
+import { useSidebar } from "@/components/ui/sidebar";
+import UserProfile from "./UserProfile";
 
 const DashboardSidebar = () => {
-  const location = useLocation();
+  const { pathname } = useLocation();
+  const { isOpen } = useSidebar();
 
   return (
-    <Sidebar>
-      <SidebarContent>
-        <div className="p-6">
-          <Link to="/dashboard" className="inline-block">
-            <h1 className="text-2xl font-bold text-primary">PetAdopt</h1>
-          </Link>
+    <aside className={cn(
+      "fixed left-0 top-0 z-40 h-screen w-64 border-r bg-background transition-transform",
+      !isOpen && "-translate-x-full"
+    )}>
+      <div className="space-y-4 py-4">
+        <div className="px-3 py-2">
+          <div className="space-y-1">
+            <Link
+              to="/dashboard"
+              className={cn(
+                "flex items-center rounded-lg px-3 py-2 text-gray-900 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50",
+                pathname === "/dashboard" &&
+                  "bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-50"
+              )}
+            >
+              <Home className="mr-2 h-4 w-4" />
+              Dashboard
+            </Link>
+            <Link
+              to="/blog-management"
+              className={cn(
+                "flex items-center rounded-lg px-3 py-2 text-gray-900 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50",
+                pathname === "/blog-management" &&
+                  "bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-50"
+              )}
+            >
+              <FileText className="mr-2 h-4 w-4" />
+              Blog Management
+            </Link>
+          </div>
         </div>
-        <SidebarGroup>
-          <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link
-                      to={item.path}
-                      className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
-                        location.pathname === item.path
-                          ? "bg-primary text-white"
-                          : "hover:bg-gray-100"
-                      }`}
-                    >
-                      <item.icon className="h-5 w-5" />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-    </Sidebar>
+      </div>
+      <div className="absolute bottom-4 left-4">
+        <UserProfile />
+      </div>
+    </aside>
   );
 };
 

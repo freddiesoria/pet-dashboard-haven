@@ -258,48 +258,9 @@ export type Database = {
           created_at?: string
           email?: string
           full_name?: string | null
-          id: string
+          id?: string
           trial_start?: string
           updated_at?: string
-        }
-        Relationships: []
-      }
-      blog_posts: {
-        Row: {
-          id: string;
-          title: string;
-          content: string;
-          excerpt: string | null;
-          slug: string;
-          published: boolean;
-          featured_image: string | null;
-          author_id: string;
-          created_at: string;
-          updated_at: string;
-        }
-        Insert: {
-          id?: string;
-          title: string;
-          content: string;
-          excerpt?: string | null;
-          slug: string;
-          published: boolean;
-          featured_image?: string | null;
-          author_id: string;
-          created_at?: string;
-          updated_at?: string;
-        }
-        Update: {
-          id?: string;
-          title?: string;
-          content?: string;
-          excerpt?: string | null;
-          slug?: string;
-          published?: boolean;
-          featured_image?: string | null;
-          author_id?: string;
-          created_at?: string;
-          updated_at?: string;
         }
         Relationships: []
       }
@@ -340,10 +301,10 @@ export type Tables<
         PublicSchema["Views"])
     ? (PublicSchema["Tables"] &
         PublicSchema["Views"])[PublicTableNameOrOptions] extends {
-      Row: infer R
-    }
-    ? R
-    : never
+        Row: infer R
+      }
+      ? R
+      : never
     : never
 
 export type TablesInsert<
