@@ -38,14 +38,14 @@ const Dashboard = () => {
 
       const { data: stats, error } = await supabase
         .from('pets')
-        .select('status')
+        .select('status, intake_type')
         .eq('user_id', user.id);
 
       if (error) throw error;
 
       return {
         intake: stats.filter(pet => 
-          ['stray', 'surrender', 'transfer', 'born_in_care', 'return_to_rescue', 'other'].includes(pet.intake_type)
+          ['stray', 'surrender', 'transfer', 'born_in_care', 'return_to_rescue', 'other'].includes(pet.intake_type || '')
         ).length,
         adopted: stats.filter(pet => pet.status === 'adopted').length,
         transferred: stats.filter(pet => pet.status === 'pending_transfer').length,
