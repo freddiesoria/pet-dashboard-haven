@@ -24,7 +24,7 @@ import { useState } from "react";
 
 const Pets = () => {
   const navigate = useNavigate();
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [selectedUserId, setSelectedUserId] = useState<string | "all">("all");
   
   // Fetch all users for super admin
   const { data: users } = useQuery({
@@ -59,24 +59,43 @@ const Pets = () => {
 
       let query = supabase
         .from("pets")
-        .select("*, profiles(email)")
+        .select("*")
         .order("created_at", { ascending: false });
 
       // If a specific user is selected and we're super admin, filter by that user
-      if (selectedUserId) {
+      if (selectedUserId !== "all") {
         query = query.eq("user_id", selectedUserId);
-      } else {
-        // Otherwise, show only the current user's pets
+      } else if (!isSuperAdmin) {
+        // If not super admin, only show their own pets
         query = query.eq("user_id", user.id);
       }
 
-      const { data, error } = await query;
+      const { data: petsData, error } = await query;
 
       if (error) {
         console.error("Error fetching pets:", error);
         return [];
       }
-      return data;
+
+      // Fetch user emails for each pet
+      if (petsData) {
+        const userIds = [...new Set(petsData.map(pet => pet.user_id))];
+        const { data: userProfiles } = await supabase
+          .from("profiles")
+          .select("id, email")
+          .in("id", userIds);
+
+        const userEmailMap = new Map(
+          userProfiles?.map(profile => [profile.id, profile.email]) || []
+        );
+
+        return petsData.map(pet => ({
+          ...pet,
+          userEmail: userEmailMap.get(pet.user_id) || "Unknown"
+        }));
+      }
+
+      return [];
     },
   });
 
@@ -94,14 +113,14 @@ const Pets = () => {
           <div className="flex items-center gap-4">
             <span className="text-sm text-muted-foreground">Filter by user:</span>
             <Select
-              value={selectedUserId || ""}
-              onValueChange={(value) => setSelectedUserId(value || null)}
+              value={selectedUserId}
+              onValueChange={(value) => setSelectedUserId(value as string)}
             >
               <SelectTrigger className="w-[250px]">
                 <SelectValue placeholder="All users" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All users</SelectItem>
+                <SelectItem value="all">All users</SelectItem>
                 {users?.map((user) => (
                   <SelectItem key={user.id} value={user.id}>
                     {user.email}
@@ -178,7 +197,7 @@ const Pets = () => {
                   </TableCell>
                   {isSuperAdmin && (
                     <TableCell className="text-muted-foreground">
-                      {(pet.profiles as any)?.email}
+                      {(pet as any).userEmail}
                     </TableCell>
                   )}
                 </TableRow>
