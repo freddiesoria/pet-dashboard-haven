@@ -3,13 +3,11 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
 import { useToast } from "./ui/use-toast";
 import RichTextEditor from "./RichTextEditor";
-import { CategorySelect } from "./CategorySelect";
-import { TagSelect } from "./TagSelect";
 import { useUserRole } from "@/hooks/useUserRole";
+import { BlogFormFields } from "./blog/BlogFormFields";
+import { BlogTaxonomyFields } from "./blog/BlogTaxonomyFields";
 
 interface BlogPostFormProps {
   post?: any;
@@ -75,47 +73,8 @@ export function BlogPostForm({ post, isEditing, onSuccess }: BlogPostFormProps) 
         savedPost = data;
       }
 
-      // Handle categories
-      if (categories.length > 0) {
-        const categoryLinks = categories.map(categoryId => ({
-          post_id: savedPost.id,
-          category_id: categoryId,
-        }));
-
-        if (isEditing) {
-          await supabase
-            .from("post_categories")
-            .delete()
-            .eq("post_id", savedPost.id);
-        }
-
-        const { error: categoryError } = await supabase
-          .from("post_categories")
-          .insert(categoryLinks);
-
-        if (categoryError) throw categoryError;
-      }
-
-      // Handle tags
-      if (tags.length > 0) {
-        const tagLinks = tags.map(tagId => ({
-          post_id: savedPost.id,
-          tag_id: tagId,
-        }));
-
-        if (isEditing) {
-          await supabase
-            .from("post_tags")
-            .delete()
-            .eq("post_id", savedPost.id);
-        }
-
-        const { error: tagError } = await supabase
-          .from("post_tags")
-          .insert(tagLinks);
-
-        if (tagError) throw tagError;
-      }
+      // Handle categories and tags
+      await handleTaxonomies(savedPost.id);
 
       toast({
         title: "Success",
@@ -133,53 +92,56 @@ export function BlogPostForm({ post, isEditing, onSuccess }: BlogPostFormProps) 
     }
   };
 
+  const handleTaxonomies = async (postId: string) => {
+    // Handle categories
+    if (categories.length > 0) {
+      const categoryLinks = categories.map(categoryId => ({
+        post_id: postId,
+        category_id: categoryId,
+      }));
+
+      if (isEditing) {
+        await supabase
+          .from("post_categories")
+          .delete()
+          .eq("post_id", postId);
+      }
+
+      await supabase
+        .from("post_categories")
+        .insert(categoryLinks);
+    }
+
+    // Handle tags
+    if (tags.length > 0) {
+      const tagLinks = tags.map(tagId => ({
+        post_id: postId,
+        tag_id: tagId,
+      }));
+
+      if (isEditing) {
+        await supabase
+          .from("post_tags")
+          .delete()
+          .eq("post_id", postId);
+      }
+
+      await supabase
+        .from("post_tags")
+        .insert(tagLinks);
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <div className="space-y-2">
-        <Label htmlFor="title">Title</Label>
-        <Input
-          id="title"
-          {...register("title", { required: "Title is required" })}
-        />
-        {errors.title && (
-          <p className="text-sm text-red-500">{String(errors.title.message)}</p>
-        )}
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="slug">Slug</Label>
-        <Input
-          id="slug"
-          {...register("slug", { required: "Slug is required" })}
-        />
-        {errors.slug && (
-          <p className="text-sm text-red-500">{String(errors.slug.message)}</p>
-        )}
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="excerpt">Excerpt</Label>
-        <Input
-          id="excerpt"
-          {...register("excerpt")}
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label>Categories</Label>
-        <CategorySelect
-          value={categories}
-          onChange={setCategories}
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label>Tags</Label>
-        <TagSelect
-          value={tags}
-          onChange={setTags}
-        />
-      </div>
+      <BlogFormFields register={register} errors={errors} />
+      
+      <BlogTaxonomyFields
+        categories={categories}
+        tags={tags}
+        onCategoriesChange={setCategories}
+        onTagsChange={setTags}
+      />
 
       <div className="space-y-2">
         <Label>Content</Label>

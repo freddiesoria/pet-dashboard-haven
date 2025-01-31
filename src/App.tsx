@@ -15,6 +15,7 @@ import Applications from "./pages/Applications";
 import Users from "./pages/Users";
 import OrganizationSettings from "./pages/OrganizationSettings";
 import Reporting from "./pages/Reporting";
+import Landing from "./pages/Landing";
 import { Toaster } from "./components/ui/toaster";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -25,18 +26,11 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <Router>
         <Routes>
+          <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
-          <Route
-            path="/"
-            element={
-              <DashboardLayout>
-                <Dashboard />
-              </DashboardLayout>
-            }
-          />
           <Route
             path="/dashboard"
             element={
