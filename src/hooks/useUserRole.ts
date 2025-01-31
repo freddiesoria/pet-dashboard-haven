@@ -8,6 +8,16 @@ export function useUserRole() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return [];
 
+      // First check if user is super admin
+      const { data: superAdminCheck } = await supabase.rpc('is_super_admin', {
+        user_id: user.id
+      });
+
+      if (superAdminCheck) {
+        return ['admin', 'editor'];  // Super admin has all roles
+      }
+
+      // If not super admin, check regular roles
       const { data, error } = await supabase
         .from("user_roles")
         .select("role")
