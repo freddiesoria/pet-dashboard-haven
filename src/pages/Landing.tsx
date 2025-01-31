@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { BarChart3, Upload, FileText } from "lucide-react";
+import { BarChart3, Upload, FileText, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Landing = () => {
@@ -8,11 +8,18 @@ const Landing = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 font-cabinet">
       <nav className="container mx-auto px-6 py-6 flex justify-between items-center">
         <div className="text-2xl font-bold text-blue-600">PetHaven</div>
-        <Link to="/login">
-          <Button className="bg-blue-600 hover:bg-blue-700 transition-colors">
-            Sign in
-          </Button>
-        </Link>
+        <div className="space-x-4">
+          <Link to="/blog">
+            <Button variant="ghost" className="hover:bg-blue-100">
+              Blog
+            </Button>
+          </Link>
+          <Link to="/login">
+            <Button className="bg-blue-600 hover:bg-blue-700 transition-colors">
+              Sign in
+            </Button>
+          </Link>
+        </div>
       </nav>
 
       <main className="container mx-auto px-6 py-12">

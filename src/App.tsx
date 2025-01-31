@@ -19,6 +19,8 @@ import Reporting from "./pages/Reporting";
 import AddPersonForm from "./components/AddPersonForm";
 import InviteUserForm from "./components/InviteUserForm";
 import OrganizationSettings from "./pages/OrganizationSettings";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +34,8 @@ const App = () => (
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/pets" element={<Pets />} />
