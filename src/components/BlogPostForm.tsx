@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "./ui/button";
+import { Label } from "./ui/label";
 import { useToast } from "./ui/use-toast";
 import RichTextEditor from "./RichTextEditor";
 import { useUserRole } from "@/hooks/useUserRole";
