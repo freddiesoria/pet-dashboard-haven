@@ -1,7 +1,7 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, LineChart, Line, ResponsiveContainer } from 'recharts';
 import { PieChart } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -83,6 +83,14 @@ const Reporting = () => {
     },
   };
 
+  // Sample data for the other charts (you can replace this with real data later)
+  const sampleTimelineData = [
+    { name: "Jan", value: 10 },
+    { name: "Feb", value: 15 },
+    { name: "Mar", value: 8 },
+    // Add more months as needed
+  ];
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2">
@@ -113,22 +121,20 @@ const Reporting = () => {
                   <p className="text-purple-600">No pets returned for that filter set.</p>
                 </div>
               ) : (
-                <>
-                  <ChartContainer config={chartConfig}>
-                    <BarChart data={chartData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="name" />
-                      <YAxis />
-                      <ChartTooltip content={<ChartTooltipContent />} />
-                      <Bar dataKey="dog" stackId="a" fill="var(--color-dog)" name="Dog" />
-                      <Bar dataKey="cat" stackId="a" fill="var(--color-cat)" name="Cat" />
-                      <Bar dataKey="small animal" stackId="a" fill="var(--color-small animal)" name="Small Animal" />
-                      <Bar dataKey="guinea pig" stackId="a" fill="var(--color-guinea pig)" name="Guinea Pig" />
-                      <Bar dataKey="rabbit" stackId="a" fill="var(--color-rabbit)" name="Rabbit" />
-                    </BarChart>
-                    <ChartLegend content={<ChartLegendContent />} />
-                  </ChartContainer>
-                </>
+                <ChartContainer config={chartConfig}>
+                  <BarChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <Bar dataKey="dog" stackId="a" fill="var(--color-dog)" name="Dog" />
+                    <Bar dataKey="cat" stackId="a" fill="var(--color-cat)" name="Cat" />
+                    <Bar dataKey="small animal" stackId="a" fill="var(--color-small animal)" name="Small Animal" />
+                    <Bar dataKey="guinea pig" stackId="a" fill="var(--color-guinea pig)" name="Guinea Pig" />
+                    <Bar dataKey="rabbit" stackId="a" fill="var(--color-rabbit)" name="Rabbit" />
+                  </BarChart>
+                  <ChartLegend content={<ChartLegendContent />} />
+                </ChartContainer>
               )}
             </div>
           </Card>
@@ -136,11 +142,11 @@ const Reporting = () => {
           <Card className="p-6">
             <h3 className="text-lg font-semibold mb-4">Annual Outcome Sum by Month {currentYear}</h3>
             <div className="h-[300px] flex items-center justify-center">
-              {data.length === 0 ? (
-                <p className="text-purple-600">No pets returned for that filter set.</p>
+              {sampleTimelineData.length === 0 ? (
+                <p className="text-purple-600">No data available</p>
               ) : (
                 <ChartContainer config={chartConfig}>
-                  <LineChart data={data}>
+                  <LineChart data={sampleTimelineData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
                     <YAxis />
@@ -155,11 +161,11 @@ const Reporting = () => {
           <Card className="p-6">
             <h3 className="text-lg font-semibold mb-4">Annual Intake Timeline by Month {currentYear}</h3>
             <div className="h-[300px] flex items-center justify-center">
-              {data.length === 0 ? (
-                <p className="text-purple-600">No pets returned for that filter set.</p>
+              {sampleTimelineData.length === 0 ? (
+                <p className="text-purple-600">No data available</p>
               ) : (
                 <ChartContainer config={chartConfig}>
-                  <LineChart data={data}>
+                  <LineChart data={sampleTimelineData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
                     <YAxis />
@@ -174,11 +180,11 @@ const Reporting = () => {
           <Card className="p-6">
             <h3 className="text-lg font-semibold mb-4">Annual Outcome Timeline by Month {currentYear}</h3>
             <div className="h-[300px] flex items-center justify-center">
-              {data.length === 0 ? (
-                <p className="text-purple-600">No pets returned for that filter set.</p>
+              {sampleTimelineData.length === 0 ? (
+                <p className="text-purple-600">No data available</p>
               ) : (
                 <ChartContainer config={chartConfig}>
-                  <LineChart data={data}>
+                  <LineChart data={sampleTimelineData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
                     <YAxis />
