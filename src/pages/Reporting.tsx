@@ -122,18 +122,20 @@ const Reporting = () => {
                 </div>
               ) : (
                 <ChartContainer config={chartConfig}>
-                  <BarChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <ChartTooltip content={<ChartTooltipContent />} />
-                    <Bar dataKey="dog" stackId="a" fill="var(--color-dog)" name="Dog" />
-                    <Bar dataKey="cat" stackId="a" fill="var(--color-cat)" name="Cat" />
-                    <Bar dataKey="small animal" stackId="a" fill="var(--color-small animal)" name="Small Animal" />
-                    <Bar dataKey="guinea pig" stackId="a" fill="var(--color-guinea pig)" name="Guinea Pig" />
-                    <Bar dataKey="rabbit" stackId="a" fill="var(--color-rabbit)" name="Rabbit" />
-                  </BarChart>
-                  <ChartLegend content={<ChartLegendContent />} />
+                  <>
+                    <BarChart data={chartData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <Bar dataKey="dog" stackId="a" fill="var(--color-dog)" name="Dog" />
+                      <Bar dataKey="cat" stackId="a" fill="var(--color-cat)" name="Cat" />
+                      <Bar dataKey="small animal" stackId="a" fill="var(--color-small animal)" name="Small Animal" />
+                      <Bar dataKey="guinea pig" stackId="a" fill="var(--color-guinea pig)" name="Guinea Pig" />
+                      <Bar dataKey="rabbit" stackId="a" fill="var(--color-rabbit)" name="Rabbit" />
+                    </BarChart>
+                    <ChartLegend content={<ChartLegendContent />} />
+                  </>
                 </ChartContainer>
               )}
             </div>
@@ -142,57 +144,21 @@ const Reporting = () => {
           <Card className="p-6">
             <h3 className="text-lg font-semibold mb-4">Annual Outcome Sum by Month {currentYear}</h3>
             <div className="h-[300px] flex items-center justify-center">
-              {sampleTimelineData.length === 0 ? (
-                <p className="text-purple-600">No data available</p>
-              ) : (
-                <ChartContainer config={chartConfig}>
-                  <LineChart data={sampleTimelineData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <ChartTooltip content={<ChartTooltipContent />} />
-                    <Line type="monotone" dataKey="value" stroke="hsl(var(--primary))" />
-                  </LineChart>
-                </ChartContainer>
-              )}
+              <p className="text-purple-600">Coming soon</p>
             </div>
           </Card>
 
           <Card className="p-6">
             <h3 className="text-lg font-semibold mb-4">Annual Intake Timeline by Month {currentYear}</h3>
             <div className="h-[300px] flex items-center justify-center">
-              {sampleTimelineData.length === 0 ? (
-                <p className="text-purple-600">No data available</p>
-              ) : (
-                <ChartContainer config={chartConfig}>
-                  <LineChart data={sampleTimelineData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <ChartTooltip content={<ChartTooltipContent />} />
-                    <Line type="monotone" dataKey="value" stroke="hsl(var(--primary))" />
-                  </LineChart>
-                </ChartContainer>
-              )}
+              <p className="text-purple-600">Coming soon</p>
             </div>
           </Card>
 
           <Card className="p-6">
             <h3 className="text-lg font-semibold mb-4">Annual Outcome Timeline by Month {currentYear}</h3>
             <div className="h-[300px] flex items-center justify-center">
-              {sampleTimelineData.length === 0 ? (
-                <p className="text-purple-600">No data available</p>
-              ) : (
-                <ChartContainer config={chartConfig}>
-                  <LineChart data={sampleTimelineData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <ChartTooltip content={<ChartTooltipContent />} />
-                    <Line type="monotone" dataKey="value" stroke="hsl(var(--primary))" />
-                  </LineChart>
-                </ChartContainer>
-              )}
+              <p className="text-purple-600">Coming soon</p>
             </div>
           </Card>
         </div>
