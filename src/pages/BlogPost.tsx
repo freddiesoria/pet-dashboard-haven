@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const BlogPost = () => {
   const { slug } = useParams();
@@ -15,14 +16,17 @@ const BlogPost = () => {
         .select("*")
         .eq("slug", slug)
         .eq("published", true)
-        .single();
+        .maybeSingle();
 
       if (error) {
-        if (error.code === "PGRST116") {
-          navigate("/blog");
-        }
+        console.error("Error fetching blog post:", error);
         throw error;
       }
+      
+      if (!data) {
+        return null;
+      }
+      
       return data;
     },
   });
@@ -32,7 +36,21 @@ const BlogPost = () => {
   }
 
   if (!post) {
-    return null;
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <Alert variant="destructive">
+          <AlertDescription>
+            Blog post not found. The post might have been removed or unpublished.
+          </AlertDescription>
+        </Alert>
+        <button
+          onClick={() => navigate("/blog")}
+          className="mt-4 text-blue-500 hover:underline"
+        >
+          Return to Blog
+        </button>
+      </div>
+    );
   }
 
   return (
