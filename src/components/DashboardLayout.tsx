@@ -1,5 +1,6 @@
+
 import { useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import DashboardSidebar from "./DashboardSidebar";
 import { useToast } from "./ui/use-toast";
@@ -19,6 +20,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -37,6 +39,27 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     return () => subscription.unsubscribe();
   }, []);
 
+  // Check URL parameters for payment status messages
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const paymentStatus = queryParams.get('payment');
+    
+    if (paymentStatus === 'success') {
+      toast({
+        title: "Payment Successful",
+        description: "Thank you for your subscription!",
+      });
+      navigate('/dashboard', { replace: true });
+    } else if (paymentStatus === 'cancelled') {
+      toast({
+        title: "Payment Cancelled",
+        description: "Your payment was cancelled. You can try again anytime.",
+        variant: "destructive",
+      });
+      navigate('/dashboard', { replace: true });
+    }
+  }, [location, toast, navigate]);
+
   useEffect(() => {
     const checkSubscriptionStatus = async () => {
       if (session?.access_token) {
@@ -53,42 +76,56 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           console.error('Error checking subscription:', error);
           toast({
             title: "Error",
-            description: "Could not check subscription status",
+            description: "Could not check subscription status. Please try again later.",
             variant: "destructive",
           });
         }
       }
     };
 
-    checkSubscriptionStatus();
+    if (session) {
+      checkSubscriptionStatus();
+    }
   }, [session, toast]);
 
   useEffect(() => {
     const checkTrialStatus = async () => {
       if (session?.user) {
-        const { data: profile, error } = await supabase
-          .from("profiles")
-          .select("trial_start")
-          .eq("id", session.user.id)
-          .single();
+        try {
+          const { data: profile, error } = await supabase
+            .from("profiles")
+            .select("trial_start")
+            .eq("id", session.user.id)
+            .maybeSingle();
 
-        if (error) {
+          if (error) {
+            console.error("Error fetching profile:", error);
+            toast({
+              title: "Error",
+              description: "Could not check trial status. Please try again later.",
+              variant: "destructive",
+            });
+            return;
+          }
+
+          if (profile) {
+            const trialEnd = addDays(new Date(profile.trial_start), 7);
+            setTrialExpired(isPast(trialEnd));
+          }
+        } catch (error) {
+          console.error("Unexpected error:", error);
           toast({
             title: "Error",
-            description: "Could not check trial status",
+            description: "An unexpected error occurred. Please try again later.",
             variant: "destructive",
           });
-          return;
-        }
-
-        if (profile) {
-          const trialEnd = addDays(new Date(profile.trial_start), 7);
-          setTrialExpired(isPast(trialEnd));
         }
       }
     };
 
-    checkTrialStatus();
+    if (session) {
+      checkTrialStatus();
+    }
   }, [session, toast]);
 
   const handleSubscribe = async () => {
@@ -103,14 +140,18 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       });
 
       if (error) throw error;
+      if (data.error) throw new Error(data.error);
+      
       if (data.url) {
         window.location.href = data.url;
+      } else {
+        throw new Error("No checkout URL returned");
       }
     } catch (error) {
       console.error('Error creating checkout session:', error);
       toast({
         title: "Error",
-        description: "Could not initiate checkout process",
+        description: error.message || "Could not initiate checkout process. Please try again later.",
         variant: "destructive",
       });
     } finally {
