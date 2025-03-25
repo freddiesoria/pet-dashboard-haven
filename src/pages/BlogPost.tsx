@@ -1,12 +1,15 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useToast } from "@/hooks/use-toast";
 
 const BlogPost = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const { data: post, isLoading } = useQuery({
     queryKey: ["blog-post", slug],
@@ -20,6 +23,11 @@ const BlogPost = () => {
 
       if (error) {
         console.error("Error fetching blog post:", error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to load the blog post. Please try again.",
+        });
         throw error;
       }
       

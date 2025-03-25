@@ -1,3 +1,4 @@
+
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@1.0.0";
 
@@ -16,12 +17,16 @@ serve(async (req) => {
     const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
     const { to, subject, html } = await req.json();
 
+    console.log("Sending email to:", to);
+
     const data = await resend.emails.send({
       from: 'onboarding@resend.dev',
       to,
       subject,
       html,
     });
+
+    console.log("Email sent successfully:", data);
 
     return new Response(
       JSON.stringify(data),
@@ -33,6 +38,8 @@ serve(async (req) => {
       },
     );
   } catch (error) {
+    console.error("Error in send-email function:", error);
+    
     return new Response(
       JSON.stringify({ error: error.message }),
       { 
